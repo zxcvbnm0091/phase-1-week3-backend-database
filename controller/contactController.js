@@ -1,16 +1,11 @@
 import Contact from "../model/contact.js";
 
 class ContactController {
-  // We remove the view calls and return the raw data or success status
-
-  static async createContact(req, res) {
+  static createContact(req, res) {
     try {
-      // In an API, arguments usually come from the request body
       const { name, phoneNumber, company, email } = req.body;
-
       const newContact = Contact.create(name, phoneNumber, company, email);
 
-      // 201 Created is the standard status code for successful creation
       return res.status(201).json({
         message: "Contact Created Successfully",
         data: newContact,
@@ -20,9 +15,9 @@ class ContactController {
     }
   }
 
-  static async updateContact(req, res) {
+  static updateContact(req, res) {
     try {
-      const { id } = req.params; // IDs usually come from the URL path
+      const { id } = req.params;
       const { name, phoneNumber, company, email } = req.body;
 
       const updatedContact = Contact.update(
@@ -38,13 +33,12 @@ class ContactController {
         data: updatedContact,
       });
     } catch (error) {
-      // 404 if not found, 400 for bad data
       const status = error.message.includes("not exist") ? 404 : 400;
       return res.status(status).json({ error: error.message });
     }
   }
 
-  static async deleteContact(req, res) {
+  static deleteContact(req, res) {
     try {
       const { id } = req.params;
       Contact.delete(id);
@@ -55,9 +49,9 @@ class ContactController {
     }
   }
 
-  static async getContacts(req, res) {
+  static getContacts(req, res) {
     try {
-      const contacts = Contact.getAll(); // Changed from .show() to match previous refactor
+      const contacts = Contact.getAll();
       return res.status(200).json(contacts);
     } catch (error) {
       return res.status(500).json({ error: "Internal Server Error" });
@@ -65,6 +59,4 @@ class ContactController {
   }
 }
 
-// Instead of export default ContactController;
-export const { createContact, updateContact, deleteContact, getContacts } =
-  ContactController;
+export default ContactController;

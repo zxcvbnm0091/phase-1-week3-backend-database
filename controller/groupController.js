@@ -1,7 +1,7 @@
 import Group from "../model/group.js";
 
 class GroupController {
-  static async createGroups(req, res) {
+  static createGroups(req, res) {
     try {
       const { groupName } = req.body;
 
@@ -16,7 +16,7 @@ class GroupController {
     }
   }
 
-  static async updateGroups(req, res) {
+  static updateGroups(req, res) {
     try {
       const { id } = req.params;
       const { name, phoneNumber, company, email } = req.body;
@@ -33,7 +33,7 @@ class GroupController {
     }
   }
 
-  static async deleteGroups(req, res) {
+  static deleteGroups(req, res) {
     try {
       const { id } = req.params;
       Group.delete(id);
@@ -44,7 +44,7 @@ class GroupController {
     }
   }
 
-  static async getGroups(req, res) {
+  static getGroups(req, res) {
     try {
       const Groups = Group.getAll();
       return res.status(200).json(Groups);
@@ -54,5 +54,4 @@ class GroupController {
   }
 }
 
-export const { createGroups, updateGroups, deleteGroups, getGroups } =
-  GroupController;
+export default GroupController;
