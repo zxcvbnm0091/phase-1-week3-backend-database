@@ -16,24 +16,8 @@ class ContactGroups {
   }
 
   static create(contactId, groupId) {
+    const insertSql = `INSERT INTO ContactGroup (contactId, groupId)  VALUES (?, ?)`;
     try {
-      const checkSql = `
-        SELECT contactId, groupId 
-        FROM ContactGroup
-        WHERE contactId = ? AND groupId = ? 
-      `;
-      const existingRecord = db.prepare(checkSql).get(contactId, groupId);
-
-      if (existingRecord) {
-        throw new Error(
-          `A relationship between contact ${contactId} and group ${groupId} already exists.`,
-        );
-      }
-
-      const insertSql = `
-        INSERT INTO ContactGroup (contactId, groupId)
-        VALUES (?, ?)
-      `;
       const info = db.prepare(insertSql).run(contactId, groupId);
 
       return {
@@ -42,6 +26,11 @@ class ContactGroups {
         groupId,
       };
     } catch (error) {
+      if (error.code.includes("CONSTRAINT")) {
+        throw new Error(
+          `Relationship already exists between contact ${contactId} and group ${groupId}.`,
+        );
+      }
       throw error;
     }
   }
@@ -112,7 +101,7 @@ class ContactGroups {
         JOIN Groups g ON gc.groupId = g.id
         WHERE g.id = ? OR g.groupName = ?
       `;
-      return db.prepare(sql).all(identifier, identifier);
+      return db.prepare(sql).all(identifier);
     } catch (error) {
       throw error;
     }
@@ -129,7 +118,7 @@ class ContactGroups {
         JOIN Contact c ON c.id = gc.ContactId
         WHERE c.id = ? OR c.name = ?
       `;
-      return db.prepare(sql).all(identifier, identifier);
+      return db.prepare(sql).all(identifier);
     } catch (error) {
       throw error;
     }
