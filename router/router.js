@@ -1,34 +1,41 @@
 import { Router } from "express";
 const router = Router();
-import {
-  getContacts,
-  createContact,
-  updateContact,
-  deleteContact,
-} from "../controller/contactController.js";
-import {
-  getGroups,
-  createGroups,
-  updateGroups,
-  deleteGroups,
-} from "../controller/groupController.js";
-import {
-  createContactGroup,
-  updateContactGroup,
-  deleteContactGroup,
-} from "../controller/contactGroupController.js";
 
-router.route("/contact").get(getContacts).post(createContact);
+import ContactController from "../controller/contactController.js";
+import GroupController from "../controller/groupController.js";
+import ContactGroupController from "../controller/contactGroupController.js";
 
-router.put("/contact/:id", updateContact);
-router.delete("/contact/:id", deleteContact);
+// CONTACT ROUTES
+router
+  .route("/contact")
+  .get(ContactController.getContacts)
+  .post(ContactController.createContact);
+router.put("/contact/:id", ContactController.updateContact);
+router.delete("/contact/:id", ContactController.deleteContact);
 
-router.route("/groups").get(getGroups).post(createGroups);
-router.put("/groups/:id", updateGroups);
-router.delete("/groups/:id", deleteGroups);
+// GROUP ROUTES
+router
+  .route("/groups")
+  .get(GroupController.getGroups)
+  .post(GroupController.createGroups);
+router.put("/groups/:id", GroupController.updateGroups);
+router.delete("/groups/:id", GroupController.deleteGroups);
 
-router.post("/contactGroup", createContactGroup);
-router.put("/contactGroup/:id", updateContactGroup);
-router.delete("/contactGroup/:id", deleteContactGroup);
+// CONTACTGROUP ROUTES
+router
+  .route("/contactGroup")
+  .get(ContactGroupController.getContactGroup)
+  .post(ContactGroupController.createContactGroup);
+router.put("/contactGroup/:id", ContactGroupController.updateContactGroup);
+router.delete("/contactGroup/:id", ContactGroupController.deleteContactGroup);
+
+router.get(
+  "/groups/member/:identifier",
+  ContactGroupController.getGroupByMember,
+);
+router.get(
+  "/contact/group/:identifier",
+  ContactGroupController.getMemberByGroup,
+);
 
 export default router;
