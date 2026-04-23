@@ -23,6 +23,7 @@ db.exec(`
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         contactId INTEGER,
         groupId INTEGER,
+        UNIQUE(contactId, groupId),
         FOREIGN KEY (contactId) REFERENCES Contact (id) ON DELETE CASCADE,
         FOREIGN KEY (groupId) REFERENCES Groups (id) ON DELETE CASCADE
     );
