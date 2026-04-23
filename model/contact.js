@@ -1,16 +1,10 @@
 import db from "../connection/connection.js";
 
 class Contact {
-  /**
-   * Retrieves all contacts.
-   */
   static getAll() {
     return db.prepare("SELECT * FROM Contact").all();
   }
 
-  /**
-   * Retrieves a single contact by ID.
-   */
   static findById(id) {
     const row = db.prepare("SELECT * FROM Contact WHERE id = ?").get(id);
     if (!row) {
@@ -19,11 +13,6 @@ class Contact {
     return row;
   }
 
-  /**
-   * Creates a new contact.
-   * Note: For production, ensure your SQL schema has UNIQUE constraints
-   * on email and phoneNumber to prevent race conditions.
-   */
   static create(name, phoneNumber, company, email) {
     const checkSql = `SELECT 1 FROM Contact WHERE name = ? OR phoneNumber = ? OR email = ? LIMIT 1`;
     const existingRecord = db.prepare(checkSql).get(name, phoneNumber, email);
@@ -44,10 +33,6 @@ class Contact {
     };
   }
 
-  /**
-   * Updates an existing contact.
-   * Uses info.changes to verify existence without an extra query.
-   */
   static update(id, name, phoneNumber, company, email) {
     const updateSql = `
       UPDATE Contact
@@ -66,10 +51,6 @@ class Contact {
     return { id, name, phoneNumber, company, email };
   }
 
-  /**
-   * Deletes a contact.
-   * Uses info.changes to verify existence without an extra query.
-   */
   static delete(id) {
     const info = db.prepare("DELETE FROM Contact WHERE id = ?").run(id);
 
